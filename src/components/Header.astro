@@ -1,0 +1,27 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, description, image } = Astro.props as Props;
+
+const page_title = title ? "Buuz" + " - " + title : "Buuz";
+const page_description = description ? description : "Automatic buuz counter.";
+---
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>{page_title}</title>
+  <meta name="title" content={page_title} />
+  <meta name="description" content={page_description} />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com/" />
+  <meta property="og:title" content={page_title} />
+  <meta property="og:description" content={page_description} />
+  {image && <meta property="og:image" content={image} />}
+</head>
