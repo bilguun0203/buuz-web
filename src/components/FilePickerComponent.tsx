@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import LoadingStatusComponent from "./LoadingStatusComponent";
 
-export default function FilePickerComponent() {
+export default function FilePickerComponent({apiUrl} : {apiUrl: string}) {
   const [selectedFile, setSelectedFile] = useState();
   const [requestSent, setRequestSent] = useState(false);
   const [detectionData, setDetectionData] = useState();
@@ -20,19 +20,19 @@ export default function FilePickerComponent() {
   const onClick = async () => {
     setStatusMessages([]);
     if (!selectedFile) {
+      setStatusMessages([...statusMessages, "Зураг сонгоогүй байна."]);
       return;
     }
     const formData = new FormData();
     formData.append("file", selectedFile, selectedFile.name);
     setRequestSent(true);
     setIsLoading(true);
-    await fetch("http://localhost:8000/predict", {
+    await fetch(apiUrl + "/predict", {
       method: "POST",
       body: formData,
     })
       .then((response) => response.json())
       .then(async (data) => {
-        console.log(data);
         setIsLoading(false);
         if ("count" in data) {
           setDetectionData(data);
@@ -58,8 +58,6 @@ export default function FilePickerComponent() {
     setSelectedFile(undefined);
     setStatusMessages([]);
   };
-
-  console.log(detectionData);
 
   return (
     <div class="text-center">
