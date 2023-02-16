@@ -1,4 +1,5 @@
 ---
+import FilePickerComponent from "../components/FilePickerComponent";
 import Footer from "../components/Footer.astro";
 import Layout from "../layouts/Layout.astro";
 ---
@@ -8,10 +9,7 @@ import Layout from "../layouts/Layout.astro";
     <section class="flex flex-col items-center justify-center h-full p-4">
       <h1 class="text-4xl font-medium">Хэдэн бууз хийсэн бэ?</h1>
       <div class="mt-8">
-        <label for="file" class="text-stone-800/90 dark:text-orange-200/80">Өрсөн буузныхаа зургийг эгц дээрээс нь аваад "Зураг илгээх" товчийг дарна уу.</label>
-        <input class="mt-4 file-input" id="file" type="file" accept="image/png,image/jpeg" />
-        <br />
-        <button class="button" type="button">Зураг илгээх</button>
+        <FilePickerComponent client:load />
       </div>
     </section>
     <section class="flex">
