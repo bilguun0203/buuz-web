@@ -1,13 +1,25 @@
 import { useState } from "preact/hooks";
 import LoadingStatusComponent from "./LoadingStatusComponent";
 
-export default function FilePickerComponent({apiUrl} : {apiUrl: string}) {
+interface DetectionResponse {
+  count: number;
+  boxes: [
+    {
+      confidence: number;
+      box: [number, number, number, number];
+    }
+  ];
+}
+
+export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
   const [selectedFile, setSelectedFile] = useState();
   const [requestSent, setRequestSent] = useState(false);
-  const [detectionData, setDetectionData] = useState();
+  const [detectionData, setDetectionData] = useState<DetectionResponse | null>(
+    null
+  );
   const [statusMessages, setStatusMessages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const onSelectFile = (e: any) => {
     setStatusMessages([]);
     if (!e.target.files || e.target.files.length === 0) {
@@ -68,11 +80,37 @@ export default function FilePickerComponent({apiUrl} : {apiUrl: string}) {
       ))}
       {requestSent && selectedFile ? (
         <div>
-          <img
-            src={URL.createObjectURL(selectedFile)}
-            alt="preview"
-            class="mx-auto h-96 object-scale-down image-border"
-          />
+          <div class="max-h-96 image-border">
+            <img
+              src={URL.createObjectURL(selectedFile)}
+              alt="preview"
+              class="object-scale-down max-h-96"
+            />
+            {detectionData &&
+              !isLoading &&
+              detectionData.boxes.map((obj) => {
+                const x1 = obj.box[0] * 100;
+                const y1 = obj.box[1] * 100;
+                const x2 = obj.box[2] * 100;
+                const y2 = obj.box[3] * 100;
+                const width = x2 - x1;
+                const height = y2 - y1;
+                return (
+                  <div
+                    class="group border-2 border-rose-600 absolute rounded-md"
+                    style={{
+                      width: width.toFixed(2) + "%",
+                      height: height.toFixed(2) + "%",
+                      top: y1.toFixed(2) + "%",
+                      left: x1.toFixed(2) + "%",
+                    }}
+                  >
+                    <span class="absolute top-10 scale-0 rounded bg-stone-800 p-2 text-xs text-orange-200 group-hover:scale-100">🤔 {Math.round(obj.confidence * 100)}%</span>
+                  </div>
+                );
+              })}
+          </div>
+
           {isLoading ? (
             <p class="my-4 text-2xl">
               <LoadingStatusComponent /> уншиж байна <LoadingStatusComponent />
