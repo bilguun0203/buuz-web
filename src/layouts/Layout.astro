@@ -4,6 +4,7 @@ import "@fontsource/ibm-plex-mono/500.css";
 import "@fontsource/ibm-plex-mono/700.css";
 import "../styles/custom.css";
 import Header from "../components/Header.astro";
+import ThemeSwitcher from "../components/ThemeSwitcher.astro";
 export interface Props {
   title?: string;
   description?: string;
@@ -14,13 +15,15 @@ const { title, description, image } = Astro.props as Props;
 ---
 
 <!DOCTYPE html>
-<html lang="mn" class="dark">
+<html lang="mn">
   <Header title={title} description={description} image={image} />
   <body>
     <slot />
+    <ThemeSwitcher />
     {
       import.meta.env.ANALYTICS_ID && import.meta.env.ANALYTICS_URL && (
         <script
+          is:inline
           async
           defer
           data-website-id={import.meta.env.ANALYTICS_ID}
