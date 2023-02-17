@@ -71,6 +71,10 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
     setStatusMessages([]);
   };
 
+  const clamp = (num: number, min: number, max: number) => {
+    return num <= min ? min : num >= max ? max : num;
+  };
+
   return (
     <div class="text-center">
       {statusMessages.map((message) => (
@@ -89,10 +93,10 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
             {detectionData &&
               !isLoading &&
               detectionData.boxes.map((obj) => {
-                const x1 = obj.box[0] * 100;
-                const y1 = obj.box[1] * 100;
-                const x2 = obj.box[2] * 100;
-                const y2 = obj.box[3] * 100;
+                const x1 = clamp(obj.box[0], 0, 1) * 100;
+                const y1 = clamp(obj.box[1], 0, 1) * 100;
+                const x2 = clamp(obj.box[2], 0, 1) * 100;
+                const y2 = clamp(obj.box[3], 0, 1) * 100;
                 const width = x2 - x1;
                 const height = y2 - y1;
                 return (
