@@ -84,11 +84,11 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
       ))}
       {requestSent && selectedFile ? (
         <div>
-          <div class="max-h-96 image-border">
+          <div class="image-border">
             <img
               src={URL.createObjectURL(selectedFile)}
               alt="preview"
-              class="object-scale-down max-h-96"
+              class="object-fill max-h-96 w-full"
             />
             {detectionData &&
               !isLoading &&
