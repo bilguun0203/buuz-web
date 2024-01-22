@@ -11,9 +11,9 @@ interface DetectionResponse {
   ];
 }
 
-function track(event: string) {
+function track(event: string, payload: object) {
   if (typeof umami !== "undefined") {
-    umami.track(event);
+    umami.track(event, payload);
   }
 }
 
@@ -53,9 +53,9 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
     })
       .then((response) => response.json())
       .then(async (data) => {
-        track("Inference success");
         setIsLoading(false);
         if ("count" in data) {
+          track("Inference success", { detected_objects: data.count });
           setDetectionData(data);
           return;
         }
