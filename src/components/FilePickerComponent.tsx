@@ -11,6 +11,12 @@ interface DetectionResponse {
   ];
 }
 
+function track(event: string) {
+  if (typeof umami !== "undefined") {
+    umami.track(event);
+  }
+}
+
 export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
   const [selectedFile, setSelectedFile] = useState();
   const [requestSent, setRequestSent] = useState(false);
@@ -27,6 +33,7 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
       return;
     }
     setSelectedFile(e.target.files[0]);
+    track("File selected");
   };
 
   const onClick = async () => {
@@ -39,12 +46,14 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
     formData.append("file", selectedFile, selectedFile.name);
     setRequestSent(true);
     setIsLoading(true);
+    track("Upload image");
     await fetch(apiUrl + "/predict", {
       method: "POST",
       body: formData,
     })
       .then((response) => response.json())
       .then(async (data) => {
+        track("Inference success");
         setIsLoading(false);
         if ("count" in data) {
           setDetectionData(data);
@@ -57,6 +66,7 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
         }
       })
       .catch((err) => {
+        track("Inference failed");
         console.log(err);
         setRequestSent(false);
         setSelectedFile(undefined);
@@ -109,7 +119,9 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
                       left: x1.toFixed(2) + "%",
                     }}
                   >
-                    <span class="absolute top-10 scale-0 rounded bg-stone-800 p-2 text-xs text-orange-200 group-hover:scale-100">🤔 {Math.round(obj.confidence * 100)}%</span>
+                    <span class="absolute top-10 scale-0 rounded bg-stone-800 p-2 text-xs text-orange-200 group-hover:scale-100">
+                      🤔 {Math.round(obj.confidence * 100)}%
+                    </span>
                   </div>
                 );
               })}
@@ -127,7 +139,12 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
           ) : (
             <br />
           )}
-          <button class="button" type="button" onClick={onBack}>
+          <button
+            class="button"
+            type="button"
+            onClick={onBack}
+            data-umami-event="Back button"
+          >
             Буцах
           </button>
         </div>
@@ -145,7 +162,12 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
             onChange={onSelectFile}
           />
           <br />
-          <button class="button" type="button" onClick={onClick}>
+          <button
+            class="button"
+            type="button"
+            onClick={onClick}
+            data-umami-event="Submit button"
+          >
             Зураг илгээх
           </button>
         </div>
