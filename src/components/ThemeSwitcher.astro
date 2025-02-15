@@ -1,11 +1,11 @@
 ---
-import { Icon } from "astro-icon";
+import { Icon } from 'astro-icon/components'
 ---
 
-<button class="fixed top-4 right-4 w-6" onclick="toggleDarkMode()" title="Theme switcher">
+<button class="fixed top-4 right-4 w-8" onclick="toggleDarkMode()" title="Theme switcher">
   <span class="text-stone-800 dark:text-orange-200">
-    <Icon pack="uil" name="moon" id="theme-toggle-moon" />
-    <Icon pack="uil" name="sun" id="theme-toggle-sun" />
+    <Icon name="uil:moon" id="theme-toggle-moon" size={24} />
+    <Icon name="uil:sun" id="theme-toggle-sun" size={24} />
   </span>
 </button>
 
