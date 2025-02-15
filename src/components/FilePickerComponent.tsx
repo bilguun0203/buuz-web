@@ -94,7 +94,7 @@ export default function FilePickerComponent({ apiUrl }: { apiUrl: string }) {
       ))}
       {requestSent && selectedFile ? (
         <div>
-          <div class="image-border">
+          <div class="image-border relative">
             <img
               src={URL.createObjectURL(selectedFile)}
               alt="preview"
